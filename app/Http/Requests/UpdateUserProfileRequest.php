@@ -28,7 +28,7 @@ class UpdateUserProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'department_id' => ['nullable', 'integer', 'exists:departments,id'],
+            'department' => ['nullable', 'integer', 'exists:departments,id'],
             'role' => [
                 'nullable',
                 'string',

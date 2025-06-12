@@ -3,7 +3,8 @@
     use App\Enum\Gender;
     use App\Enum\UserRole;
 @endphp
-<form method="POST" onsubmit="return confirmSubmit(this);" action="{{ isset($user) ? route('users.update', $user) : route('users.store') }}">
+
+<form method="POST" action="{{ isset($user) ? route('users.update', $user) : route('users.store') }}">
     @csrf
     @if(isset($user))
         @method('PATCH')
@@ -20,13 +21,16 @@
                 <div class="col-lg-2">
                     <div class="form-group">
                         <label>Vai trò</label>
-                        <select name="role" class="form-control mb-2">
+                        <select name="role" class="form-control mb-2 @error('role') is-invalid @enderror">
                             @foreach(UserRole::options() as $key => $role)
                                 <option value="{{ $key }}" {{ old('role', $user->role ?? '') == $key ? 'selected' : '' }}>
                                     {{ $role }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('role')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -44,25 +48,34 @@
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Email*</label>
-                        <input type="email" name="email" value="{{ old('email', $user->email ?? '') }}" class="form-control mb-2" placeholder="Email" required>
+                        <input type="text" name="email" value="{{ old('email', $user->email ?? '') }}" class="form-control mb-2 @error('email') is-invalid @enderror" placeholder="Email">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Tạo mật khẩu*</label>
-                        <input type="password" name="password" required class="form-control mb-2" placeholder="Tạo mật khẩu">
+                        <input type="password" name="password" class="form-control mb-2 @error('password') is-invalid @enderror" placeholder="Tạo mật khẩu">
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="form-group">
                         <label>Vai trò</label>
-                        <select name="role" class="form-control mb-2">
+                        <select name="role" class="form-control mb-2 @error('role') is-invalid @enderror">
                             @foreach(UserRole::options() as $key => $role)
                                 <option value="{{ $key }}" {{ old('role', $user->role ?? '') == $key ? 'selected' : '' }}>
                                     {{ $role }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('role')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -78,64 +91,85 @@
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Họ & Tên*</label>
-                        <input type="text" required name="name" value="{{ old('name', $user->name ?? '') }}" class="form-control mb-2" placeholder="Name">
+                        <input type="text" name="name" value="{{ old('name', $user->name ?? '') }}" class="form-control mb-2 @error('name') is-invalid @enderror" placeholder="Name">
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Tình trạng hôn nhân</label>
-                        <select name="department_id" class="form-control mb-2">
+                        <select name="marital_status" class="form-control mb-2 @error('marital_status') is-invalid @enderror">
                             @foreach(MaritalStatus::options() as $key => $status)
                                 <option value="{{ $key }}" {{ old('marital_status', $user->profile->marital_status ?? '') == $key ? 'selected' : '' }}>
                                     {{ $status }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('marital_status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Ngày vào làm</label>
-                        <input type="date" name="start_date" value="{{ old('start_date', $user->profile->start_date ?? '') }}" class="form-control mb-2" placeholder="Name">
+                        <input type="date" name="start_date" value="{{ old('start_date', $user->profile->start_date ?? '') }}" class="form-control mb-2 @error('start_date') is-invalid @enderror" placeholder="dd/mm/yyyy">
+                        @error('start_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Giới tính</label>
-                        <select name="gender" class="form-control mb-2">
+                        <select name="gender" class="form-control mb-2 @error('gender') is-invalid @enderror">
                             @foreach(Gender::options() as $key => $status)
                                 <option value="{{ $key }}" {{ old('gender', $user->profile->gender ?? '') == $key ? 'selected' : '' }}>
                                     {{ $status }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('gender')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Ngày sinh</label>
-                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $user->profile->date_of_birth ?? '') }}" class="form-control mb-2" placeholder="Name">
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $user->profile->date_of_birth ?? '') }}" class="form-control mb-2 @error('date_of_birth') is-invalid @enderror" placeholder="dd/mm/yyyy">
+                        @error('date_of_birth')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Số điện thoại</label>
-                        <input type="text" name="Số điện thoại" value="{{ old('phone', $user->profile->phone ?? '') }}" class="form-control mb-2" placeholder="Số điện thoại">
+                        <input type="text" name="phone" value="{{ old('phone', $user->profile->phone ?? '') }}" class="form-control mb-2 @error('phone') is-invalid @enderror" placeholder="Số điện thoại">
+                        @error('phone')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Phòng ban</label>
-                        <select name="department_id" class="form-control mb-2">
+                        <select name="department" class="form-control mb-2 @error('department') is-invalid @enderror">
                             <option value="">Please select</option>
                             @foreach($departments as $dep)
-                                <option value="{{ $dep->id }}" {{ old('department_id', $user->profile->department_id ?? '') == $dep->id ? 'selected' : '' }}>
+                                <option value="{{ $dep->id }}" {{ old('department', $user->profile->department_id ?? '') == $dep->id ? 'selected' : '' }}>
                                     {{ $dep->name }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('department')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -147,7 +181,10 @@
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label>Ngày cấp CCCD</label>
-                        <input type="date" name="cccd_date" value="{{ old('cccd_date', $user->profile->cccd_date ?? '') }}" class="form-control mb-2" placeholder="Name">
+                        <input type="date" name="cccd_date" value="{{ old('cccd_date', $user->profile->cccd_date ?? '') }}" class="form-control mb-2 @error('cccd_date') is-invalid @enderror" placeholder="dd/mm/yyyy">
+                        @error('cccd_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -165,10 +202,4 @@
     </div>
     <button class="btn btn-primary">Lưu thông tin</button>
 </form>
-@section('scripts')
-    <script>
-        function confirmSubmit() {
-            return confirm('Bạn có muốn lưu thông tin vừa nhập không?');
-        }
-    </script>
-@endsection
+

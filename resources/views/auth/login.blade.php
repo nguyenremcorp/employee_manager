@@ -12,13 +12,19 @@
                 <div class="form-group">
                     <div class="col-12">
                         <label>Email</label>
-                        <input class="form-control" name="email" type="text" required="" value="{{ old('email') }}" placeholder="Email">
+                        <input class="form-control @error('email') is-invalid @enderror" name="email" type="text" value="{{ old('email') }}" placeholder="Email">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-12">
-                            <label>Password</label>
-                        <input class="form-control" name="password" type="password" required="" placeholder="Password">
+                        <label>Password</label>
+                        <input class="form-control @error('password') is-invalid @enderror" name="password" type="password" placeholder="Password">
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="form-group text-center m-t-20">
@@ -26,15 +32,13 @@
                         <button class="btn btn-primary btn-block btn-lg waves-effect waves-light" type="submit">Log In</button>
                     </div>
                 </div>
-                @if ($errors->any())
-                    <div class="form-group">
-                        <div class="col-12" style="color: red;">
-                            @foreach ($errors->all() as $error)
-                                <div>{{ $error }}</div>
-                            @endforeach
-                        </div>
+                <div class="form-group ml-20 mr-20">
+                @if ($errors->has('login_error'))
+                    <div class="alert alert-danger">
+                        {{ $errors->first('login_error') }}
                     </div>
                 @endif
+                </div>
             </form>
         </div>
     </div>

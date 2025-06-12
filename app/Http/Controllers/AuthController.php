@@ -32,9 +32,9 @@ class AuthController extends Controller
             return redirect()->route('welcome');
         }
 
-        return back()->withErrors(
-            ['email' => __('messages.auth.login_error')]
-        );
+        return back()->withErrors([
+            'login_error' => __('messages.auth.login_error')
+        ]);
     }
 
     /**

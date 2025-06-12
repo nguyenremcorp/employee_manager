@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use App\enum\MaritalStatus;
@@ -29,7 +30,7 @@ class AdminCreateUserRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'unique:users,email'],
             'role' => ['required', 'string', Rule::in(UserRole::values())],
             'password' => [
                 'required',
@@ -47,12 +48,12 @@ class AdminCreateUserRequest extends FormRequest
                 Rule::in(MaritalStatus::values())
             ],
             'address' => ['nullable'],
-            'date_of_birth' => ['nullable'],
-            'phone' => ['nullable'],
+            'date_of_birth' => ['nullable', 'date'],
+            'phone' => ['nullable', 'regex:/^[0-9]{9,11}$/'],
             'position' => ['nullable'],
             'cccd' => ['nullable'],
-            'cccd_date' => ['nullable'],
-            'start_date' => ['nullable'],
+            'cccd_date' => ['nullable', 'date'],
+            'start_date' => ['nullable', 'date'],
         ];
     }
 
@@ -66,10 +67,13 @@ class AdminCreateUserRequest extends FormRequest
         return [
             'email.required' => 'Vui lòng nhập email.',
             'email.email' => 'Email không đúng định dạng.',
+            'email.unique' => 'Email này đã được đăng ký.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
             'password.numbers' => 'Mật khẩu phải có ít nhất 1 chữ số.',
+            'name.required' => 'Vui lòng nhập tên user',
             'role' => 'Vai trò không hợp lệ',
+            'phone' => 'Số điện thoại không hợp lệ',
             'department.exists' => 'Phòng ban bạn vừa chọn không tồn tại.',
             'department.int' => 'Giá trị chọn phòng ban phải là số nguyên',
             'gender' => 'Giới tính không hợp lệ',

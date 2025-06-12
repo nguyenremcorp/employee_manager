@@ -29,7 +29,7 @@
         <div class="col-lg-2">
             <div class="form-group">
                 <label>Phòng ban</label>
-                <select name="department" id="select_deparment" class="form-control mb-2">
+                <select name="department" id="select_deparment" class="form-control mb-2 @error('department') is-invalid @enderror">
                     <option value="">Select option</option>
                     @foreach($departments as $dep)
                         <option value="{{ $dep->id }}" {{ request('department') == $dep->id ? 'selected' : '' }}>
@@ -37,13 +37,16 @@
                         </option>
                     @endforeach
                 </select>
+                @error('department')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
         </div>
         <!-- Tình trạng hôn nhân -->
         <div class="col-lg-2">
             <div class="form-group">
                 <label>Tình trạng hôn nhân</label>
-                <select name="marital_status" id="marital_status" class="form-control mb-2">
+                <select name="marital_status" id="marital_status" class="form-control mb-2 @error('marital_status') is-invalid @enderror">
                     <option value="">Select option</option>
                     @foreach(MaritalStatus::options() as $key => $status)
                         <option value="{{ $key }}" value="{{ $key }}" {{ request('marital_status') == $key ? 'selected' : '' }}>
@@ -51,13 +54,16 @@
                         </option>
                     @endforeach
                 </select>
+                @error('marital_status')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
         </div>
         <!-- Giới tính -->
         <div class="col-lg-2">
             <div class="form-group">
                 <label>Giới tính</label>
-                <select name="gender" id="gender" class="form-control mb-2">
+                <select name="gender" id="gender" class="form-control mb-2 @error('gender') is-invalid @enderror">
                     <option value="">Select option</option>
                     @foreach(Gender::options() as $key => $gender)
                         <option value="{{ $key }}" value="{{ $key }}" {{ request('gender') == $key ? 'selected' : '' }}>
@@ -65,6 +71,9 @@
                         </option>
                     @endforeach
                 </select>
+                @error('gender')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
         </div>
     </div> 

@@ -65,7 +65,7 @@ class UserService
             'cccd_date' => $options['cccd_date'] ?? null,
             'marital_status' => $options['marital_status'] ?? null,
             'start_date' => $options['start_date'] ?? null,
-            'department_id' => $options['department_id'] ?? null,
+            'department_id' => $options['department'] ?? null,
         ];
 
         return $this->userRepository->updateUserProfile($user, $userData, $profileData);
