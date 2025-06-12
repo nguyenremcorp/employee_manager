@@ -45,12 +45,12 @@ class UpdateUserProfileRequest extends FormRequest
             'gender' => ['nullable', 'string', Rule::in(Gender::values())],
             'marital_status' => ['nullable', Rule::in(MaritalStatus::values())],
             'address' => ['nullable'],
-            'date_of_birth' => ['nullable'],
-            'phone' => ['nullable'],
+            'date_of_birth' => ['nullable', 'date'],
+            'phone' => ['nullable', 'regex:/^[0-9]{9,11}$/'],
             'position' => ['nullable'],
             'cccd' => ['nullable'],
-            'cccd_date' => ['nullable'],
-            'start_date' => ['nullable'],
+            'cccd_date' => ['nullable', 'date'],
+            'start_date' => ['nullable', 'date'],
         ];
     }
 
