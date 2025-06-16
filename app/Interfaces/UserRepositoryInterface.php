@@ -1,30 +1,36 @@
 <?php
+
 namespace App\Interfaces;
 
-interface UserRepositoryInterface 
+use App\Models\User;
+use \Illuminate\Pagination\LengthAwarePaginator;
+
+interface UserRepositoryInterface
 {
     /**
-     * Get list user 
+     * Get list user has paginate
      *
-     * @param integer $perPage
+     * @param int $perPage
      * @param array $options
-     * @return void
+     * @return LengthAwarePaginator
      */
-    public function getUsersPaginate($perPage = 10, $options = []);
+    public function getUsersPaginate(int $perPage = 10, array $options = []): LengthAwarePaginator;
 
     /**
      * Create user
+     * 
      * @param array $options
-     * @return void
+     * @return User|null
      */
-    public function createUser($options = []);
+    public function createUser(array $options = []): ?User;
 
     /**
-     * Update user and profile of user
-     * @param mixed $user
-     * @param mixed $userData
-     * @param mixed $profileData
-     * @return void
+     * Update user and profile
+     * 
+     * @param User $user
+     * @param array $userData
+     * @param array $profileData
+     * @return User|null
      */
-    public function updateUserProfile($user, $userData = [], $profileData = []);
+    public function updateUserProfile(User $user, array $userData = [], array $profileData = []): ?User;
 }

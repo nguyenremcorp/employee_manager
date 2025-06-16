@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-use Illuminate\Validation\Rule;
+
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -9,8 +9,10 @@ class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * @return boolean
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -20,7 +22,7 @@ class LoginRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'email' => ['required', 'email'],
@@ -33,7 +35,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * messages function
+     * Display messages validation
      * 
      * @return array
      */

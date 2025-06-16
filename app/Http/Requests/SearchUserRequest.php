@@ -1,17 +1,18 @@
 <?php
 
 namespace App\Http\Requests;
+
 use Illuminate\Validation\Rule;
-use App\enum\MaritalStatus;
-use App\enum\Gender;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SearchUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * @return boolean
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,24 +22,24 @@ class SearchUserRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'keyword' => ['nullable', 'string', 'max:255'],
             'search_by' => ['nullable', Rule::in(['name', 'email', 'phone'])],
             'page'  => ['nullable', 'integer', 'min:1'],
             'department' => ['nullable', 'integer', 'exists:departments,id'],
-            'gender' => ['nullable', 'string', Rule::in(Gender::values())],
-            'marital_status' => ['nullable', Rule::in(MaritalStatus::values())],
+            'gender' => ['nullable', 'string', Rule::in(get_values('gender'))],
+            'marital_status' => ['nullable', Rule::in(get_values('marital'))],
         ];
     }
 
     /**
-     * Undocumented function
+     * Message validation
      *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return [
             'keyword' => 'Từ khóa không hợp lệ (0-255 ký tự)',

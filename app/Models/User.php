@@ -8,12 +8,24 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Profile;
 use Illuminate\Support\Facades\DB;
-use App\Enum\UserRole;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    /**
+     * Table name in database.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
+     * Primarykey of table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -26,15 +38,6 @@ class User extends Authenticatable
         'password',
         'role',
     ];
-
-    /**
-     * Summary of profile
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<Profile, User>
-     */
-    public function profile(): HasOne
-    {
-        return $this->hasOne(Profile::class);
-    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -60,20 +63,31 @@ class User extends Authenticatable
     }
 
     /**
+     * Summary of profile
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<Profile, User>
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+
+    /**
      * Check isAmin role of user (call $user->isAdmin)
      *
      * @return boolean
      */
     public function getIsAdminAttribute(): bool
     {
-        return $this->role == UserRole::ROLE_ADMIN;
+        return $this->role == config('const.user_role.ADMIN');
     }
 
     /**
-     * Summary of boot
+     * The "booting" method of the model.
+     * 
      * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 

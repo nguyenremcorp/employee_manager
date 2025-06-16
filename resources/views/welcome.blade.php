@@ -6,9 +6,6 @@
 
 @section('content')
 
-@php
-    use App\Enum\MaritalStatus;
-@endphp
 
 <div class="p-2 text-center">
     @auth

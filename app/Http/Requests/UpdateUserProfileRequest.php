@@ -5,16 +5,15 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use App\enum\MaritalStatus;
-use App\enum\Gender;
-use App\enum\UserRole;
 
 class UpdateUserProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * @return boolean
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -22,9 +21,9 @@ class UpdateUserProfileRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -32,18 +31,18 @@ class UpdateUserProfileRequest extends FormRequest
             'role' => [
                 'nullable',
                 'string',
-                Rule::in(UserRole::values()),
-                function($attribute, $value, $fail) {
+                Rule::in(get_values('user_role')),
+                function ($attribute, $value, $fail) {
                     if (
                         $value &&
                         !Auth::user()->isAdmin
                     ) {
                         $fail('Bạn không có quyền update vai trò');
                     }
-                } // Chỉ có admin mới có quyền update role của user
+                }
             ],
-            'gender' => ['nullable', 'string', Rule::in(Gender::values())],
-            'marital_status' => ['nullable', Rule::in(MaritalStatus::values())],
+            'gender' => ['nullable', 'string', Rule::in(get_values('gender'))],
+            'marital_status' => ['nullable', Rule::in(get_values('marital'))],
             'address' => ['nullable'],
             'date_of_birth' => ['nullable', 'date'],
             'phone' => ['nullable', 'regex:/^[0-9]{9,11}$/'],
@@ -55,11 +54,11 @@ class UpdateUserProfileRequest extends FormRequest
     }
 
     /**
-     * messages function
+     * Display messages validation
      * 
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return [
             'department.exists' => 'Phòng ban bạn vừa chọn không tồn tại.',

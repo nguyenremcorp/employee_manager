@@ -3,59 +3,90 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Department;
 use App\Services\UserService;
+use App\Services\DepartmentService;
 use App\Http\Requests\SearchUserRequest;
 use App\Http\Requests\AdminCreateUserRequest;
 use App\Http\Requests\UpdateUserProfileRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
-    protected UserService $service;
+    /**
+     * 
+     * @var UserService
+     */
+    protected UserService $userService;
 
-    public function __construct(UserService $userService)
+    /**
+     * 
+     * @var DepartmentService
+     */
+    protected DepartmentService $departmentService;
+
+    /**
+     * Constructor method
+     *
+     * @param UserService $userService
+     * @param DepartmentService $department
+     */
+    public function __construct(UserService $userService, DepartmentService $department)
     {
-        $this->service = $userService;
+        $this->userService = $userService;
+        $this->departmentService = $department;
     }
 
     /**
      * Display a listing of the resource.
+     *
+     * @param SearchUserRequest $request
+     * @return View
+     * 
      */
-    public function index(SearchUserRequest $request)
+    public function index(SearchUserRequest $request): View
     {
         $input = $request->validated();
-        $users = $this->service->getUsersPaginateService(20, $input);
 
-        return view('users.list', compact('users'));
+        $users = $this->userService->getUsersPaginateService(20, $input);
+        $departments = $this->departmentService->deparmentListService();
+
+        return view('users.list', compact('users', 'departments'));
     }
 
     /**
      * Show the form for creating a new resource.
+     *
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
-        $departments = Department::select('id', 'name')->get(); // hardCode
+        $departments = $this->departmentService->deparmentListService();
 
         return view('users.create', compact('departments'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Save user and profile request
+     *
+     * @param AdminCreateUserRequest $request
+     * @return RedirectResponse
      */
-    public function store(AdminCreateUserRequest $request)
+    public function store(AdminCreateUserRequest $request): RedirectResponse
     {
         try {
             $input = $request->validated();
-            $this->service->createUserAndProfileService($input);
+            $this->userService->createUserAndProfileService($input);
 
             return redirect()
                 ->route('users.create')
                 ->with('success', __('messages.create_user.success'));
         } catch (\Exception $e) {
             Log::error('Error add user: ' . $e->getMessage());
+
             return redirect()
                 ->route('users.create')
                 ->with('error', __('messages.create_user.error'));
@@ -63,9 +94,12 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get infomation of user
+     *
+     * @param User $user
+     * @return View
      */
-    public function show(User $user)
+    public function show(User $user): View
     {
         $userLogin = Auth::user();
 
@@ -78,29 +112,25 @@ class UserController extends Controller
         }
 
         // Get deparment list
-        $departments = Department::select('id', 'name')->get(); // hardCode
+        $departments = $this->departmentService->deparmentListService();
 
         return view('users.edit', compact('user', 'departments'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update user and profile
+     *
+     * @param UpdateUserProfileRequest $request
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateUserProfileRequest $request, User $user)
+    public function update(UpdateUserProfileRequest $request, User $user): RedirectResponse
     {
         $userUpdate = $user ?? Auth::user();
 
         try {
             $input = $request->validated();
-            $this->service->updateUserOrProfileService($userUpdate, $input);
+            $this->userService->updateUserOrProfileService($userUpdate, $input);
 
             return redirect()
                 ->route('user.show',  $userUpdate)
@@ -115,9 +145,12 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove user
+     *
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
         $name = $user->name ?? '';
 
@@ -129,9 +162,11 @@ class UserController extends Controller
             return redirect()
                 ->route('admin.list')
                 ->with(
-                    'success', 
-                    __('messages.delete_user.success', 
-                    ['name' => $name])
+                    'success',
+                    __(
+                        'messages.delete_user.success',
+                        ['name' => $name]
+                    )
                 );
         } catch (\Exception $e) {
             DB::rollback();
@@ -140,7 +175,7 @@ class UserController extends Controller
             return redirect()
                 ->route('admin.list')
                 ->with(
-                    'error', 
+                    'error',
                     __('messages.delete_user.error', ['name' => $name])
                 );
         }

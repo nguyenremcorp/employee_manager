@@ -37,7 +37,7 @@
             <div class="dropdown notification-list nav-pro-img">
                 <div class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                     @auth
-                        <span>Vai trò: {{ \App\Enum\UserRole::label(auth()->user()->role) }}</span></span>
+                         <span>Vai trò: {{ get_user_role(auth()->user()->role) }}</span></span>
                     @endauth
                 </div>   
             </div>

@@ -6,8 +6,6 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\Profile;
 use App\Enum\UserRole;
-use App\Enum\Gender;
-use App\Enum\MaritalStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -32,9 +30,9 @@ class DatabaseSeeder extends Seeder
          * Tạo 50 member role là user
          * 5 user đầu tiên có vai trò là admin, còn lại là role user
          */
-        for($i = 1; $i <= 100; $i ++) {
-            $role = $i <= 5 ? UserRole::ROLE_ADMIN : UserRole::ROLE_USER;
-            
+        for ($i = 1; $i <= 100; $i++) {
+            $role = $i <= 5 ? 'admin' : 'user';
+
             $user = User::create([
                 'name' => "User Test$i",
                 'email' => "user$i@example.com",
@@ -52,7 +50,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0' . rand(100000000, 999999999),
                 'date_of_birth' => $randomDate,
                 'department_id' => $departmentIds[array_rand($departmentIds)],
-                'gender' => fake()->randomElement(Gender::values()),
+                'gender' => fake()->randomElement(get_values('gender')),
                 'position' => fake()->randomElement([
                     'Nhân viên',
                     'Trưởng Phòng ',
@@ -61,7 +59,7 @@ class DatabaseSeeder extends Seeder
                 ]), // Cho nhập tự do 
                 'cccd' => rand(10000000000, 99999999999),
                 'cccd_date' => $randomDate,
-                'marital_status' => fake()->randomElement(MaritalStatus::values()),
+                'marital_status' => fake()->randomElement(get_values('marital')),
                 'start_date' => $startDate,
             ]);
         }

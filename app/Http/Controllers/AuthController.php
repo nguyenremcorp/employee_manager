@@ -3,26 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     /**
-     * Summary of showLogin
-     * @return \Illuminate\Contracts\View\View
+     * Show form login
+     * 
+     * @return View
      */
-    public function showLogin()
+    public function showLogin(): View
     {
-       return view('auth.login');
+        return view('auth.login');
     }
 
     /**
-     * Summary of login
-     * @param \Illuminate\Http\Request $request
-     * @return mixed|\Illuminate\Http\RedirectResponse
+     * Handle the user login request
+     * 
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): RedirectResponse
     {
         $credentials = $request->validated();
 
@@ -38,10 +42,11 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout user
-     * @return mixed|\Illuminate\Http\RedirectResponse
+     * Handle the user logout request
+     * 
+     * @return RedirectResponse
      */
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
         $request->session()->invalidate();

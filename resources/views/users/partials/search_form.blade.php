@@ -1,9 +1,6 @@
 @php
-    use App\Enum\MaritalStatus;
-    use App\Enum\Gender;
-    use App\Models\Department;
-
-    $departments = Department::select('id', 'name')->get();
+$maritalOptions = get_options('marital');
+$genderOptions = get_options('gender');
 @endphp
 
 <!-- Search form -->
@@ -13,7 +10,7 @@
             <div class="pb-2"><label>Tìm kiếm theo: </label></div>
             <!-- Hardcode -->
             @foreach(['name' => 'Tên', 'email' => 'Email', 'phone' => 'Số điện thoại'] as $key => $value)
-                <label><input type="radio" name="search_by" value="{{ $key }}" {{ request('search_by') == $key ? 'checked' : '' }}> &nbsp;{{ $value }}&nbsp;</label>&nbsp;&nbsp;
+            <label><input type="radio" name="search_by" value="{{ $key }}" {{ request('search_by') == $key ? 'checked' : '' }}> &nbsp;{{ $value }}&nbsp;</label>&nbsp;&nbsp;
             @endforeach
         </div>
     </div>
@@ -32,13 +29,13 @@
                 <select name="department" id="select_deparment" class="form-control mb-2 @error('department') is-invalid @enderror">
                     <option value="">Select option</option>
                     @foreach($departments as $dep)
-                        <option value="{{ $dep->id }}" {{ request('department') == $dep->id ? 'selected' : '' }}>
-                            {{ $dep->name }}
-                        </option>
+                    <option value="{{ $dep->id }}" {{ request('department') == $dep->id ? 'selected' : '' }}>
+                        {{ $dep->name }}
+                    </option>
                     @endforeach
                 </select>
                 @error('department')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         </div>
@@ -48,14 +45,14 @@
                 <label>Tình trạng hôn nhân</label>
                 <select name="marital_status" id="marital_status" class="form-control mb-2 @error('marital_status') is-invalid @enderror">
                     <option value="">Select option</option>
-                    @foreach(MaritalStatus::options() as $key => $status)
-                        <option value="{{ $key }}" value="{{ $key }}" {{ request('marital_status') == $key ? 'selected' : '' }}>
-                            {{ $status }}
-                        </option>
+                    @foreach($maritalOptions as $key => $status)
+                    <option value="{{ $key }}" value="{{ $key }}" {{ request('marital_status') == $key ? 'selected' : '' }}>
+                        {{ $status }}
+                    </option>
                     @endforeach
                 </select>
                 @error('marital_status')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         </div>
@@ -65,16 +62,16 @@
                 <label>Giới tính</label>
                 <select name="gender" id="gender" class="form-control mb-2 @error('gender') is-invalid @enderror">
                     <option value="">Select option</option>
-                    @foreach(Gender::options() as $key => $gender)
-                        <option value="{{ $key }}" value="{{ $key }}" {{ request('gender') == $key ? 'selected' : '' }}>
-                            {{ $gender }}
-                        </option>
+                    @foreach($genderOptions as $key => $gender)
+                    <option value="{{ $key }}" value="{{ $key }}" {{ request('gender') == $key ? 'selected' : '' }}>
+                        {{ $gender }}
+                    </option>
                     @endforeach
                 </select>
                 @error('gender')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         </div>
-    </div> 
+    </div>
 </form>

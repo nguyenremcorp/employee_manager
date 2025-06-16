@@ -3,17 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use App\enum\MaritalStatus;
-use App\enum\Gender;
-use App\enum\UserRole;
 
 class AdminCreateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * @return boolean
      */
     public function authorize(): bool
     {
@@ -25,13 +23,17 @@ class AdminCreateUserRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
 
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'role' => ['required', 'string', Rule::in(UserRole::values())],
+            'role' => [
+                'required',
+                'string',
+                Rule::in(get_values('user_role'))
+            ],
             'password' => [
                 'required',
                 'string',
@@ -41,11 +43,11 @@ class AdminCreateUserRequest extends FormRequest
             'gender' => [
                 'nullable',
                 'string',
-                Rule::in(Gender::values())
+                Rule::in(get_values('gender'))
             ],
             'marital_status' => [
                 'nullable',
-                Rule::in(MaritalStatus::values())
+                Rule::in(get_values('marital'))
             ],
             'address' => ['nullable'],
             'date_of_birth' => ['nullable', 'date'],
@@ -58,11 +60,11 @@ class AdminCreateUserRequest extends FormRequest
     }
 
     /**
-     * messages function
+     * Display messages validation
      * 
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return [
             'email.required' => 'Vui lòng nhập email.',

@@ -6,17 +6,18 @@ use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use \Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
     /**
      * implements function getUsersPaginate of UserRepositoryInterface
      *
-     * @param integer $perPage
+     * @param int $perPage
      * @param array $options
-     * @return void
+     * @return LengthAwarePaginator
      */
-    public function getUsersPaginate($perPage = 10, $options = []) 
+    public function getUsersPaginate(int $perPage = 10, array $options = []): LengthAwarePaginator
     {
         $query = User::with([
             'profile',
@@ -26,7 +27,7 @@ class UserRepository implements UserRepositoryInterface
         $searchBy = $options['search_by'] ?? 'name'; // Default search theo tên
 
         // search theo tên, email
-        if ( !empty($options['keyword']) && $searchBy) {
+        if (!empty($options['keyword']) && $searchBy) {
             if ($searchBy == 'phone') {
                 $query->whereHas('profile', function ($query2) use ($options) {
                     $query2->where('phone', 'like', '%' . trim($options['keyword']) . '%');
@@ -59,10 +60,11 @@ class UserRepository implements UserRepositoryInterface
 
     /**
      * implements function createUser
+     * 
      * @param array $options
-     * @return void
+     * @return User|null
      */
-    public function createUser($options = []) 
+    public function createUser(array $options = []): ?User
     {
         // Create user
         return DB::transaction(function () use ($options) {
@@ -93,13 +95,14 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Update user and profile of user 
+     * Update user and profile of user
+     * 
      * @param User $user
      * @param array $userData
      * @param array $profileData
-     * @return void
+     * @return User|null
      */
-    public function updateUserProfile($user, $userData = [], $profileData = [])
+    public function updateUserProfile(User $user, array $userData = [], array $profileData = []): ?User
     {
         // Update user and profile
         return DB::transaction(function () use ($user, $userData, $profileData) {
